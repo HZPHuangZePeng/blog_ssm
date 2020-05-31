@@ -80,10 +80,17 @@
         </dependency>
 
         <!--log4j-->
+        <!--这里有一个bug    受影响版本
+            Apache Log4j <= 1.2.17
+            Apache Log4j的1.X版本官方在2015年8月已停止维护
+            不受影响版本
+            Apache Log4j >= 2.8.2
+            SocketServer的暴露端口 CVE-2019-17571不可信数据的反序列化，
+            -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.8.2</version>
         </dependency>
 
         <!--servlet-->
