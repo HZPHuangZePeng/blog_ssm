@@ -3,13 +3,14 @@ package com.gao.LeetCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(System.in));
         Solution solution=new Solution();
-        int[] target = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
+//        int[] target = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
         int[] nums = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
 //        int pos = Integer.parseInt(bufferedReader.readLine());
 //        ListNode head = solution.creatListNode(nums);
@@ -20,8 +21,85 @@ public class Solution {
 //            poshead = poshead.next;
 //        }
 //        String s = bufferedReader.readLine();
-        System.out.println(solution.canBeEqual(target,nums));
+        List<List<Integer>> res = solution.permute2(nums);
+        for (List<Integer> path : res) {
+            System.out.println(path);
+        }
+//        System.out.println(solution.permute(nums));
+
     }
+
+    public List<List<Integer>> permute2(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length < 1) return res;
+        List<Integer> path = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        Arrays.sort(nums);
+        dfspermute2(nums, 0, nums.length, visited, res, path);
+        return res;
+    }
+
+    private void dfspermute2(int[] nums, int pos, int len, boolean[] visited, List<List<Integer>> res, List<Integer> path) {
+        if (pos >= len) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < len; i++) {
+            if (visited[i]) continue;
+            if (i > 0 && nums[i] == nums[i - 1] && !visited[i - 1]) continue;
+            path.add(nums[i]);
+            visited[i] = true;
+            dfspermute2(nums, pos + 1, len, visited, res, path);
+            visited[i] = false;
+            path.remove(pos);
+        }
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length < 1) return res;
+        List<Integer> path = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        dfspermute(nums, 0, nums.length, visited, res, path);
+        return res;
+    }
+
+    private void dfspermute(int[] nums, int pos, int len, boolean[] visited, List<List<Integer>> res, List<Integer> path) {
+        if (pos >= len) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < len; i++) {
+            if (!visited[i]) {
+                path.add(nums[i]);
+                visited[i] = true;
+                dfspermute(nums, pos + 1, len, visited, res, path);
+                path.remove(pos);
+                visited[i] = false;
+            }
+        }
+    }
+
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return CreateMaxTree(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode CreateMaxTree(int[] nums, int begin, int end) {
+        if (begin > end) return null;
+//        if(begin==end)return new TreeNode(nums[begin]);
+        int index = begin, max = nums[begin];
+        for (int i = begin; i <= end; i++) {
+            if (nums[i] > max) {
+                max = nums[i];
+                index = i;
+            }
+        }
+        TreeNode root = new TreeNode(nums[index]);
+        root.left = CreateMaxTree(nums, begin, index - 1);
+        root.right = CreateMaxTree(nums, index + 1, end);
+        return root;
+    }
+
     public boolean canBeEqual(int[] target, int[] arr) {
         int[] targetIndex = new int[1001];
         int[] arrIndex = new int[1001];
