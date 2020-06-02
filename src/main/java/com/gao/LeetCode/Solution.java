@@ -28,7 +28,6 @@ public class Solution {
 //        System.out.println(solution.permute(nums));
 
     }
-
     public List<List<Integer>> permute2(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         if (nums == null || nums.length < 1) return res;

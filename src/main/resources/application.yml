@@ -24,7 +24,7 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
 
-
+    #    filters: stat,wall,log4j
     filters: stat,wall,log4j
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
