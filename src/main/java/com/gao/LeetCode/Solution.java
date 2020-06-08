@@ -3,30 +3,153 @@ package com.gao.LeetCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(System.in));
         Solution solution=new Solution();
-//        int[] target = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
-        int[] nums = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
-//        int pos = Integer.parseInt(bufferedReader.readLine());
-//        ListNode head = solution.creatListNode(nums);
-//        System.out.println(head);
-//        ListNode poshead = solution.createListNodePos(nums,pos);
-//        for (int i=0;i<20;i++){
-//            System.out.print(poshead.val+" ");
-//            poshead = poshead.next;
+//        int n = Integer.parseInt(bufferedReader.readLine());
+//        int[][] ints = new int[n][];
+//        for (int i=0;i<n;i++){
+//        int[] nums = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
 //        }
-//        String s = bufferedReader.readLine();
-        List<List<Integer>> res = solution.permute2(nums);
-        for (List<Integer> path : res) {
-            System.out.println(path);
-        }
-//        System.out.println(solution.permute(nums));
+        int m = Integer.parseInt(bufferedReader.readLine());
+        int n = Integer.parseInt(bufferedReader.readLine());
+        System.out.println(solution.uniquePaths(m, n));
+//        for(int i:solution.spiralOrder(ints)){
+//            System.out.print(i+" ");
+//        }
+    }
 
+    public int uniquePathsIII(int[][] grid) {
+        if (grid == null || grid.length < 1) return 0;
+        int row = grid.length, col = grid[0].length;
+        int[][] dp = new int[row][col];
+        int beginx = 0, beginy = 0, endx = 0, endy = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 1) {
+                    beginx = i;
+                    beginy = j;
+                } else if (grid[i][j] == 2) {
+                    endx = i;
+                    endy = j;
+                }
+            }
+        }
+        for (int i = beginx; i < endx; i++) {
+            if (grid[i][0] == -1) {
+                dp[i][0] = 0;
+                break;
+            }
+            dp[i][0] = 1;
+        }
+        for (int i = beginy; i < endy; i++) {
+            if (grid[0][i] == -1) {
+                dp[0][i] = 0;
+                break;
+            }
+            dp[0][i] = 1;
+        }
+        for (int i = beginx; i < endx; i++) {
+            for (int j = beginy; j < endy; j++) {
+                if (grid[i][j] == -1) {
+                    dp[i][j] = 0;
+                } else {
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+        }
+        return dp[endx - 1][endy - 1];
+    }
+
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int[m][n];
+        for (int i = 0; i < m; i++) dp[i][0] = 1;
+        for (int i = 0; i < n; i++) dp[0][i] = 1;
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid == null || obstacleGrid.length < 1) return 0;
+        int row = obstacleGrid.length, col = obstacleGrid[0].length;
+        int[][] dp = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            if (obstacleGrid[i][0] == 1) {
+                dp[i][0] = 0;
+                break;
+            } else
+                dp[i][0] = 1;
+        }
+        for (int i = 0; i < col; i++) {
+            if (obstacleGrid[0][i] == 1) {
+                dp[0][i] = 0;
+                break;
+            } else
+                dp[0][i] = 1;
+        }
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                } else
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[row - 1][col - 1];
+    }
+
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) return 0;
+        return find(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum);
+    }
+
+    private int find(TreeNode root, int sum) {
+        if (root == null) return 0;
+        int res = 0;
+        if (sum == root.val) res++;
+        int left = find(root.left, sum - root.val);
+        int right = find(root.right, sum - root.val);
+        return res + left + right;
+    }
+
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        int res = 0;
+        for (int i : nums) set.add(i);
+        for (int i : set) {
+            if (!set.contains(i - 1)) {
+                int temp = 1;
+                while (set.contains(i + 1)) {
+                    temp++;
+                    i++;
+                }
+                res = Math.max(res, temp);
+            }
+        }
+        return res;
+    }
+
+    public int[] spiralOrder(int[][] matrix) {
+        int l = 0, r = matrix.length - 1, t = 0, b = matrix[0].length - 1, x = 0;
+        int[] res = new int[(r + 1) * (b + 1)];
+        while (true) {
+            for (int i = l; i <= r; i++) res[x++] = matrix[t][i];
+            if (++t > b) break;
+            for (int i = t; i <= b; i++) res[x++] = matrix[i][r];
+            if (--r < l) break;
+            for (int i = r; i >= l; i--) res[x++] = matrix[b][i];
+            if (b-- < t) break;
+            for (int i = b; i >= t; i--) res[x++] = matrix[i][l];
+            if (++l > r) break;
+        }
+        return res;
     }
     public List<List<Integer>> permute2(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
@@ -98,6 +221,7 @@ public class Solution {
         root.right = CreateMaxTree(nums, index + 1, end);
         return root;
     }
+
 
     public boolean canBeEqual(int[] target, int[] arr) {
         int[] targetIndex = new int[1001];
