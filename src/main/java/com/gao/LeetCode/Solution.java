@@ -22,47 +22,9 @@ public class Solution {
 //        }
     }
 
-    public int uniquePathsIII(int[][] grid) {
-        if (grid == null || grid.length < 1) return 0;
-        int row = grid.length, col = grid[0].length;
-        int[][] dp = new int[row][col];
-        int beginx = 0, beginy = 0, endx = 0, endy = 0;
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                if (grid[i][j] == 1) {
-                    beginx = i;
-                    beginy = j;
-                } else if (grid[i][j] == 2) {
-                    endx = i;
-                    endy = j;
-                }
-            }
-        }
-        for (int i = beginx; i < endx; i++) {
-            if (grid[i][0] == -1) {
-                dp[i][0] = 0;
-                break;
-            }
-            dp[i][0] = 1;
-        }
-        for (int i = beginy; i < endy; i++) {
-            if (grid[0][i] == -1) {
-                dp[0][i] = 0;
-                break;
-            }
-            dp[0][i] = 1;
-        }
-        for (int i = beginx; i < endx; i++) {
-            for (int j = beginy; j < endy; j++) {
-                if (grid[i][j] == -1) {
-                    dp[i][j] = 0;
-                } else {
-                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
-                }
-            }
-        }
-        return dp[endx - 1][endy - 1];
-    }
+//    public int[] masterMind(String solution, String guess) {
+//
+//    }
 
     public int uniquePaths(int m, int n) {
         int[][] dp = new int[m][n];

@@ -59,7 +59,7 @@ public class bingchaji {
         for (String str : equations) {
             if (str.charAt(1) == '!') {
                 int index1 = str.charAt(0) - 'a';
-                int index2 = str.charAt(0) - 'a';
+                int index2 = str.charAt(3) - 'a';
                 if (find(parent, index1) == find(parent, index2)) return false;
             }
         }
