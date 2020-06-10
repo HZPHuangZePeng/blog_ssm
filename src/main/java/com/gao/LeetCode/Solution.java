@@ -9,22 +9,116 @@ public class Solution {
     public static void main(String[] args) throws IOException {
         BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(System.in));
         Solution solution=new Solution();
+        int[] nums = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
+//        int[] endTime = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
+//        int queryTime = Integer.parseInt(bufferedReader.readLine());
 //        int n = Integer.parseInt(bufferedReader.readLine());
-//        int[][] ints = new int[n][];
-//        for (int i=0;i<n;i++){
-//        int[] nums = Arrays.stream(bufferedReader.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
-//        }
-        int m = Integer.parseInt(bufferedReader.readLine());
-        int n = Integer.parseInt(bufferedReader.readLine());
-        System.out.println(solution.uniquePaths(m, n));
-//        for(int i:solution.spiralOrder(ints)){
-//            System.out.print(i+" ");
-//        }
+        for (int i : solution.minSubsequence(nums)) {
+            System.out.print(i + " ");
+        }
     }
 
-//    public int[] masterMind(String solution, String guess) {
-//
-//    }
+    public List<Integer> minSubsequence(int[] nums) {
+        if (nums.length == 1) return new ArrayList<Integer>(nums[0]);
+        Arrays.sort(nums);
+        int cur = 0;
+        List<Integer> res = new ArrayList<>();
+        for (int i = nums.length - 1; i >= 0; i--) {
+            res.add(nums[i]);
+            cur += nums[i];
+            if (panduanBigger(nums, i, cur)) break;
+        }
+        return res;
+    }
+
+    private boolean panduanBigger(int[] nums, int i, int cur) {
+        int sum = 0;
+        for (int j = 0; j < i; j++) {
+            sum += nums[j];
+        }
+        return cur > sum;
+    }
+
+    public int minStartValue(int[] nums) {
+        int temp = 0, min = 0;
+        for (int i = 0; i < nums.length; i++) {
+            temp = Math.min(temp + nums[i], nums[i]);
+            min = Math.min(temp, min);
+            System.out.println("第" + i + "次" + "temp:" + temp + "min:" + min);
+        }
+        return min;
+    }
+
+    public int minStartValue2(int[] nums) {
+        int res = 0, sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if ((sum + res) < 1) {
+                res = -sum + 1;
+            }
+            System.out.println("res" + res);
+        }
+        return res;
+    }
+
+    public List<String> buildArray(int[] target, int n) {
+        List<String> res = new ArrayList<>();
+        int temp = 1, cur = 0;
+        while (cur < target.length) {
+            if (target[cur] == temp) {
+                res.add("Push");
+                cur++;
+                temp++;
+            } else {
+                res.add("Push");
+                res.add("Pop");
+                temp++;
+            }
+        }
+        return res;
+    }
+
+    public int busyStudent(int[] startTime, int[] endTime, int queryTime) {
+        int ans = 0;
+        for (int i = 0; i < startTime.length; i++) {
+            if (startTime[i] <= queryTime && endTime[i] >= queryTime) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+
+    public int maxPower(String s) {
+        if (s == null || s.length() < 1) return 0;
+        char[] chars = s.toCharArray();
+        int temp = 1, res = 1;
+        for (int i = 1; i < chars.length; i++) {
+            if (chars[i] == chars[i - 1]) {
+                temp += 1;
+                Math.max(temp, res);
+            } else {
+                temp = 1;
+            }
+        }
+        return res;
+    }
+
+    public int isPrefixOfWord(String sentence, String searchWord) {
+        String[] words = sentence.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            if (panduan(words[i], searchWord))
+                return i + 1;
+        }
+        return -1;
+    }
+
+    private boolean panduan(String word, String searchWord) {
+        if (searchWord.length() > word.length()) return false;
+        for (int i = 0; i < searchWord.length(); i++) {
+            if (searchWord.charAt(i) != word.charAt(i)) return false;
+        }
+        return true;
+    }
 
     public int uniquePaths(int m, int n) {
         int[][] dp = new int[m][n];
