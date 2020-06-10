@@ -18,6 +18,33 @@ public class Solution {
         }
     }
 
+    public int countLargestGroup(int n) {
+        int[] nums = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            nums[func(i)]++;
+        }
+        int count = 0;
+        int cur = 1;
+        for (int i = 1; i <= n; i++) {
+            if (nums[i] == cur) {
+                count++;
+            } else if (nums[i] > cur) {
+                cur = nums[i];
+                count = 1;
+            }
+        }
+        return count;
+    }
+
+    private int func(int i) {
+        int res = 0;
+        while (i != 0) {
+            res += i % 10;
+            i /= 10;
+        }
+        return res;
+    }
+
     public List<Integer> minSubsequence(int[] nums) {
         if (nums.length == 1) return new ArrayList<Integer>(nums[0]);
         Arrays.sort(nums);
